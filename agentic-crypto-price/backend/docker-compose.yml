@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  agentic-crypto-api:
+    image: rishikametaborong/agentic-crypto-api:latest  # Replace with your actual image name
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    environment:
+      API_KEY: "2aa2dc640bmshecc6af18f5a160ep1e79c5jsn095d25a21855"
+    container_name: agentic-crypto-container
+    restart: always  # Automatically restart the container if it stops
