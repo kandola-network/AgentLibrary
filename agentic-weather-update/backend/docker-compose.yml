@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  agentic-weather-api:
+    image: rishikametaborong/agentic-weather-api:latest  # Replace with your actual image name
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    container_name: agentic-weather-container
+    restart: always  # Automatically restart the container if it stops
