@@ -15,6 +15,10 @@ async def query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         [InlineKeyboardButton("Mail", callback_data='Mail')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
+    if not update.message:
+        print("Received update without a message.")
+        return ConversationHandler.END  # End the conversation if there's no message
+
     await update.message.reply_text("Please select the RAG category:", reply_markup=reply_markup)
     return WAITING_FOR_CATEGORY
 
@@ -32,7 +36,7 @@ async def handle_query_input(update: Update, context: ContextTypes.DEFAULT_TYPE)
     try:
         await update.message.chat.send_action(action="typing")
         response = await make_query_call(chat_id, query_text, rag_category)
-        await update.message.reply_text(f"Query Response:\n```json\n{response}\n```", parse_mode='Markdown')
+        await update.message.reply_text(f"Query Response:\n```\n{response}\n```", parse_mode='Markdown')
     except Exception as e:
         await update.message.reply_text(f"Error processing your query: {str(e)}")
     return ConversationHandler.END

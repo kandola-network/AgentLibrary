@@ -1,7 +1,6 @@
 import aiohttp
 from utils.conversation_manager import conversation_manager
-
-BASE_URL = 'http://127.0.0.1:7000'
+from utils.constant import BASE_URL
 
 async def make_query_call(chat_id: int, query: str, rag_category: str):
     conversations = conversation_manager.get_conversations(chat_id)
@@ -9,8 +8,9 @@ async def make_query_call(chat_id: int, query: str, rag_category: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(f"{BASE_URL}/query", json=payload) as response:
             response_data = await response.json()
+            response_content = response_data.get('response', '')
             conversation_manager.add_conversation(chat_id, query, response_data.get('response', ''))
-            return response_data
+            return response_content
 
 async def make_agent_call(chat_id: int, query: str):
     conversations = conversation_manager.get_conversations(chat_id)
@@ -18,5 +18,14 @@ async def make_agent_call(chat_id: int, query: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(f"{BASE_URL}/agent", json=payload) as response:
             response_data = await response.json()
-            conversation_manager.add_conversation(chat_id, query, response_data.get('response', ''))
-            return response_data.get('response', '')
+            print(response_data)
+            # Extract the nested "response" string if it exists
+            response_content = response_data.get('response', {}).get('response', '')
+
+            # Print the extracted response
+            print(response_content)
+
+            # Store the conversation
+            conversation_manager.add_conversation(chat_id, query, response_content)
+            return response_content
+
