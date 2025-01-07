@@ -1,0 +1,3 @@
+python-telegram-bot[job-queue] 
+aiohttp
+data3_network_agent==0.0.4
