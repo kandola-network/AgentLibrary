@@ -1,7 +1,7 @@
 from data3_network_agent.lib import Data3AgentUtils
 
 data3 = Data3AgentUtils()
-# PROD_TELEGRAM_TOKEN = data3.fetch_agent_env_variables(docker_service_name="agentic-rag-telegram-bot", field_names=["TELEGRAM_TOKEN"])
+PROD_TELEGRAM_TOKEN = data3.fetch_agent_env_variables(docker_service_name="agentic-rag-telegram-bot", field_names=["TELEGRAM_TOKEN"])
 PROD_TELEGRAM_TOKEN = ""
 
 DEV_TELEGRAM_TOKEN = "7837158639:AAFlhIe89140GKqlhnd-HG8ivejC__i_WCE" 
