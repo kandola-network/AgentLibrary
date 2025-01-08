@@ -1,7 +1,9 @@
 version: "3.8"
 
 services:
-  agentic-rag-telegram-bot:
+  agentic-rag-telegram-bot-test:
     image: rishikametaborong/agentic-rag-telegram-bot:latest  # Replace with your actual image name
-    container_name: agentic-rag-telegram-bot
+    container_name: agentic-rag-telegram-bot-test
     restart: always  # Automatically restart the container if it stops
+    ports:
+      - "8000:8000" 
