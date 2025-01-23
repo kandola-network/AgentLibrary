@@ -14,7 +14,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     answer: str
 
-@app.post("/search", response_model=QueryResponse)
+@app.post("/search")
 async def search(query_request: QueryRequest):
     try:
         data3 = Data3AgentUtils()
@@ -22,7 +22,7 @@ async def search(query_request: QueryRequest):
         tavily_client = TavilyClient(api_key=api_key["TAVILY_API_KEY"])
         # Execute the Tavily search query
         answer = tavily_client.qna_search(query=query_request.query)
-        return QueryResponse(answer=answer)
+        return answer
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during search: {str(e)}")
 
