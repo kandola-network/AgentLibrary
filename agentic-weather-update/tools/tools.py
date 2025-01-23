@@ -9,16 +9,13 @@ def call_fetch_token_pair_price(token1, token2):
     :param token1: token symbol (e.g. BTC, ETH, etc.)
     :param token2: token symbol (e.g. BTC, ETH, etc.)
     """
-    data3 = Data3Utils().fetch_env_variables
+    data3 = Data3Utils()
     base_url = data3.fetch_base_url()
-    port = data3.fetch_port("agentic-crypto-api")
-    print("Base URL:", base_url)
-    print("Port:", port)
+    port = data3.fetch_port("agentic-crypto-api-2")
+    print("3-Base URL:", base_url)
     url = f"{base_url}:{port}/api/tokens/{token1}/{token2}/price"
-    print("URL:", url)
     try:
         response = requests.get(url)
-        print("Response:", response)
         response.raise_for_status()
         print("Token Pair Price API Response:", response.json())
         print("Token Pair Price API Response:", response.text)
@@ -37,7 +34,7 @@ def call_compare_token_pair_prices(token1_pair1, token2_pair1, token1_pair2, tok
     """
     data3 = Data3Utils()
     base_url = data3.fetch_base_url()
-    port = data3.fetch_port("agentic-crypto-api")    
+    port = data3.fetch_port("agentic-crypto-api-2")    
     url = f"{base_url}:{port}/api/tokens/{token1_pair1}/{token2_pair1}/{token1_pair2}/{token2_pair2}/compare"
     try:
         response = requests.get(url)
@@ -56,7 +53,7 @@ def call_fetch_historical_price_data(token, time_period="7d"):
     """
     data3 = Data3Utils()
     base_url = data3.fetch_base_url()
-    port = data3.fetch_port("agentic-crypto-api")    
+    port = data3.fetch_port("agentic-crypto-api-2")    
     url = f"{base_url}:{port}/api/tokens/{token}/history/{time_period}"
     try:
         response = requests.get(url)

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+data3-network-variables==0.0.6
+tavily-python
+data3-network-agent==0.0.4
+

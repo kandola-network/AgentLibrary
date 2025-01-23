@@ -3,17 +3,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
 import dotenv   
-
+from data3_network_agent.lib import Data3AgentUtils
 dotenv.load_dotenv()
 
 # API Configuration
-API_HOST = "coinranking1.p.rapidapi.com"
-API_KEY = os.getenv("API_KEY", "2aa2dc640bmshecc6af18f5a160ep1e79c5jsn095d25a2185")
-BASE_URL = f"https://{API_HOST}"
-HEADERS = {
-    "x-rapidapi-host": API_HOST,
-    "x-rapidapi-key": API_KEY
-}
+
 
 app = FastAPI(
     title="Agentic Crypto Price API",
@@ -22,12 +16,18 @@ app = FastAPI(
 )
 
 
-# Pydantic models for request and response data
-class TempResponse(BaseModel):
-    response: str
-
 # Helper function to fetch data from the API
 def _fetch_data(endpoint):
+    API_HOST = "coinranking1.p.rapidapi.com"
+    data3 = Data3AgentUtils()
+    api_key = data3.fetch_agent_env_variables(docker_service_name="agentic-crypto-api", field_names=["API_KEY"])
+    API_KEY = api_key["API_KEY"]
+    print(f"from agent backend API_KEY: {API_KEY}")
+    BASE_URL = f"https://{API_HOST}"
+    HEADERS = {
+        "x-rapidapi-host": API_HOST,
+        "x-rapidapi-key": API_KEY
+    }
     """Helper function to fetch data from API"""
     url = f"{BASE_URL}/{endpoint}"
     response = requests.get(url, headers=HEADERS)
@@ -45,7 +45,7 @@ def _get_coin_uuid(symbol):
 
 # Fetch the current price for a token pair
 
-@app.get("/api/tokens/{token1}{token2}/price", response_model=TempResponse, tags=["Token Price"])
+@app.get("/api/tokens/{token_1}/{token_2}/price", tags=["Token Price"])
 def fetch_token_pair_price(token_1: str, token_2: str):
     """
     Fetch the current price for a token pair
@@ -64,10 +64,10 @@ def fetch_token_pair_price(token_1: str, token_2: str):
     quote_price = float(_fetch_data(f"coin/{quote_uuid}/price")["price"])
     
     pair_price = base_price / quote_price
-    return TempResponse(response=f"The current price for {token_1}/{token_2} is ${pair_price:,.2f}.")
+    return f"The current price for {token_1}/{token_2} is ${pair_price:,.2f}."
 
 # Compare prices of two token pairs
-@app.get("/api/tokens/{token1pair1}{token2pair1}{token1pair2}{token2pair2}/compare", response_model=TempResponse, tags=["Token Price Comparison"])
+@app.get("/api/tokens/{token_1_pair_1}/{token_2_pair_1}/{token_1_pair_2}/{token_2_pair_2}/compare", tags=["Token Price Comparison"])
 def compare_token_pair_prices(token1_pair1: str, token2_pair1: str, token1_pair2: str, token2_pair2: str):
     """
     Compare prices of two token pairs
@@ -98,10 +98,10 @@ def compare_token_pair_prices(token1_pair1: str, token2_pair1: str, token1_pair2
 
     pair2_price = price3 / price4
         
-    return TempResponse(response=f"{token1_pair1}/{token2_pair1} is currently trading at ${pair1_price:,.2f}, whereas {token1_pair2}/{token2_pair2} is trading at ${pair2_price:,.2f}.")
+    return f"{token1_pair1}/{token2_pair1} is currently trading at ${pair1_price:,.2f}, whereas {token1_pair2}/{token2_pair2} is trading at ${pair2_price:,.2f}."
 
 # Fetch historical price data for a token
-@app.get("/api/tokens/{token}/history/{timeperiod}", response_model=TempResponse, tags=["Historical Price Data"])
+@app.get("/api/tokens/{token}/history/{timeperiod}", tags=["Historical Price Data"])
 def fetch_historical_price_data(token: str, time_period: str = "7d"):
     """
     Fetch historical price data for a token
@@ -121,9 +121,7 @@ def fetch_historical_price_data(token: str, time_period: str = "7d"):
     price_min = min(prices)
     price_max = max(prices)
     
-    return TempResponse(
-        response=f"The {token}/USDT price trend over the last {time_period} has ranged from ${price_min:.2f} to ${price_max:.2f}, with a current price of ${current_price:.2f}."
-    )
+    return f"The {token}/USDT price trend over the last {time_period} has ranged from ${price_min:.2f} to ${price_max:.2f}, with a current price of ${current_price:.2f}."
 
 # Health check endpoint
 @app.get("/api/status/ping", tags=["Health Check"])

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   agentic-crypto-api:
-    image: rishikametaborong/agentic-crypto-api:latest  # Replace with your actual image name
+    image: rishikametaborong/agentic-crypto-api:0.0.1  # Replace with your actual image name
     ports:
       - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
     environment:
