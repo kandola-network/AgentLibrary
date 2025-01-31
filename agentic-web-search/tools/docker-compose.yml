@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  agentic-web-search-api:
+  agentic-web-search:
     image: rishikametaborong/agentic-web-search-api:latest  # Replace with your actual image name
     ports:
       - "8001:8001"  # Map port 8000 on the host to port 8000 in the container

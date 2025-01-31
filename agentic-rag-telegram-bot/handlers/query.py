@@ -1,19 +1,18 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler, MessageHandler, ConversationHandler, ContextTypes, filters
-from utils.api_calls import make_query_call
+from utils.api_calls import make_query_call, get_custom_list
 
 WAITING_FOR_QUERY = 1
 WAITING_FOR_CATEGORY = 2
 
 async def query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['flow'] = 'query'
-    keyboard = [
-        [InlineKeyboardButton("Health", callback_data='Health')],
-        [InlineKeyboardButton("Finance", callback_data='Finance')],
-        [InlineKeyboardButton("Journal", callback_data='Journal')],
-        [InlineKeyboardButton("Messaging", callback_data='Messaging')],
-        [InlineKeyboardButton("Mail", callback_data='Mail')],
-    ]
+    custom_list = ['Health', 'Finance', 'Journal', 'Messaging', 'Mail']
+    custom_list.extend(await get_custom_list())
+    print(custom_list)
+    keyboard = []
+    for key in custom_list:
+       keyboard.append([InlineKeyboardButton(key, callback_data=key)])
     reply_markup = InlineKeyboardMarkup(keyboard)
     if not update.message:
         print("Received update without a message.")

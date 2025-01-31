@@ -28,4 +28,10 @@ async def make_agent_call(chat_id: int, query: str):
             # Store the conversation
             conversation_manager.add_conversation(chat_id, query, response_content)
             return response_content
+        
+async def get_custom_list():
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{BASE_URL}/custom-list") as response:
+            response_data = await response.json()
+            return response_data.get('response', [])
 
