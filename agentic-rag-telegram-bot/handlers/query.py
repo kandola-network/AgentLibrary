@@ -7,8 +7,7 @@ WAITING_FOR_CATEGORY = 2
 
 async def query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['flow'] = 'query'
-    custom_list = ['Health', 'Finance', 'Journal', 'Messaging', 'Mail']
-    custom_list.extend(await get_custom_list())
+    custom_list = await get_custom_list()
     print(custom_list)
     keyboard = []
     for key in custom_list:
